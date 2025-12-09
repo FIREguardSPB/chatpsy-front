@@ -26,7 +26,6 @@ const App = () => {
   const [rateLimitMessage, setRateLimitMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<'error' | 'success'>('error');
   const [paymentTestMode, setPaymentTestMode] = useState(false);
-  const [feedbackSuccessMessage, setFeedbackSuccessMessage] = useState<string | null>(null);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -98,17 +97,12 @@ const App = () => {
     resetResult();
     setChatPayload(null);
     resetMeta();
-    setFeedbackSuccessMessage(null);
     // Сбрасываем ChatUploadForm, чтобы он забыл предыдущий файл
     setChatUploadKey(prev => prev + 1);
   };
 
   const handleExportPdf = () => {
     window.print();
-  };
-
-  const handleExportDocx = () => {
-    alert(APP_TEXT.EXPORT_DOCX_NOT_READY);
   };
 
   const canAnalyze = !!chatPayload && !isOverLimit && !loading && !metaLoading;

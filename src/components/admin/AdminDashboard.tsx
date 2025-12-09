@@ -15,10 +15,6 @@ export const AdminDashboard = () => {
   const [selectedIps, setSelectedIps] = useState<Set<string>>(new Set());
   const [defaultBonus, setDefaultBonus] = useState<number>(0);
 
-  const [analysisId, setAnalysisId] = useState('');
-  const [fullAnalysisJson, setFullAnalysisJson] = useState<string>('');
-  const [returnUrl, setReturnUrl] = useState<string>(() => window.location.href);
-
   const canAdmin = useMemo(() => token.trim().length > 0, [token]);
 
   const refreshStats = async () => {
@@ -94,33 +90,6 @@ export const AdminDashboard = () => {
     }
   };
 
-  const handleMarkPaid = async () => {
-    if (!canAdmin || !analysisId.trim()) return;
-    setLoading(true);
-    setError(null);
-    try {
-      await markPaid(analysisId.trim());
-    } catch (e) {
-      setError('Failed to mark as paid');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreatePayment = async () => {
-    if (!analysisId.trim()) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const { payment_url } = await createPayment(analysisId.trim(), returnUrl);
-      window.open(payment_url, '_blank');
-    } catch (e) {
-      setError('Failed to create payment');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleAddCredits = async () => {
     if (!canAdmin || !ip.trim()) return;
     setLoading(true);
@@ -130,20 +99,6 @@ export const AdminDashboard = () => {
       await refreshStats();
     } catch (e) {
       setError('Failed to add credits');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGetFull = async () => {
-    if (!analysisId.trim()) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getFullAnalysis(analysisId.trim());
-      setFullAnalysisJson(JSON.stringify(data, null, 2));
-    } catch (e) {
-      setError('Failed to fetch full analysis');
     } finally {
       setLoading(false);
     }

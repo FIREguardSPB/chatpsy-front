@@ -65,6 +65,7 @@ export const AnalysisResult = ({
   const [feedbackBonus, setFeedbackBonus] = useState<number>(0);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
+  /* Unused participantLegend
   const participantLegend = useMemo(() => {
     if (nameMapping && Object.keys(nameMapping).length > 0) {
       // Полная легенда с маппингом: Реальное имя → USER_*
@@ -81,6 +82,7 @@ export const AnalysisResult = ({
       className,
     }));
   }, [nameMapping]);
+  */
 
   // Подгружаем конфиг и статистику при маунте
   useEffect(() => {
