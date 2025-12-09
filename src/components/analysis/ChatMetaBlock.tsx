@@ -6,6 +6,7 @@ import {
   estimateRangeBytes,
   formatDateLabel,
 } from '../../utils';
+import { APP_TEXT } from '../../constants';
 import styles from './ChatMetaBlock.module.css';
 
 interface ChatMetaBlockProps {
@@ -54,16 +55,15 @@ export const ChatMetaBlock = ({
 
   return (
     <section className={`card ${styles.metaCard}`}>
-      <h2 className="card__title">Диапазон и объём данных</h2>
+      <h2 className="card__title">{APP_TEXT.META_TITLE}</h2>
       <p className="card__text">
-        Выберите период переписки. Мы оценим, сколько текста попадёт в модель.
-        Для тестового режима лучше держаться в рамках рекомендуемого объёма.
+        {APP_TEXT.META_DESCRIPTION}
       </p>
 
       <div className={styles.metaRange}>
         <div className={styles.metaRange__fields}>
           <label className={styles.metaRange__field}>
-            <span className={styles.metaRange__label}>С</span>
+            <span className={styles.metaRange__label}>{APP_TEXT.META_RANGE_FROM}</span>
             <input
               type="date"
               value={rangeFrom ?? ""}
@@ -71,7 +71,7 @@ export const ChatMetaBlock = ({
             />
           </label>
           <label className={styles.metaRange__field}>
-            <span className={styles.metaRange__label}>По</span>
+            <span className={styles.metaRange__label}>{APP_TEXT.META_RANGE_TO}</span>
             <input
               type="date"
               value={rangeTo ?? ""}
@@ -80,7 +80,7 @@ export const ChatMetaBlock = ({
           </label>
         </div>
         <p className={styles.metaRange__hint}>
-          Диапазон в экспорте:{" "}
+          {APP_TEXT.META_RANGE_HINT}{" "}
           <strong>
             {formatDateLabel(meta.stats.first_message_at)} —{" "}
             {formatDateLabel(meta.stats.last_message_at)}
@@ -91,14 +91,14 @@ export const ChatMetaBlock = ({
 
       <div className={styles.metaStatsRow}>
         <div className={styles.metaStat}>
-          <span className={styles.metaStat__label}>Всего загружено</span>
+          <span className={styles.metaStat__label}>{APP_TEXT.META_STAT_UPLOADED}</span>
           <span className={styles.metaStat__value}>
             {formatBytes(meta.upload_bytes)}
           </span>
         </div>
         <div className={styles.metaStat}>
           <span className={styles.metaStat__label}>
-            В модель при выбранном диапазоне (оценочно)
+            {APP_TEXT.META_STAT_IN_MODEL}
           </span>
           <span
             className={`${styles.metaStat__value} ${
@@ -111,9 +111,8 @@ export const ChatMetaBlock = ({
       </div>
 
       <p className={styles.metaRange__limit}>
-        Рекомендуемый объём для одного анализа:{" "}
-        <strong>{formatBytes(meta.recommended_bytes)}</strong>. Если оценка
-        выше — лучше сузить период.
+        {APP_TEXT.META_RECOMMENDED_LIMIT}{" "}
+        <strong>{formatBytes(meta.recommended_bytes)}</strong>. {APP_TEXT.META_LIMIT_WARNING}
       </p>
     </section>
   );

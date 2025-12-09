@@ -5,7 +5,7 @@ import { RelationshipCard } from './RelationshipCard';
 import { RecommendationsList } from './RecommendationsList';
 import { StatsBlock } from './StatsBlock';
 import { FeedbackForm } from '../feedback/FeedbackForm';
-import { FEEDBACK_FLAG_KEY } from '../../constants';
+import { FEEDBACK_FLAG_KEY, APP_TEXT } from '../../constants';
 import styles from './AnalysisResult.module.css';
 import { createPayment, getFullAnalysis } from '../../api/admin';
 
@@ -176,26 +176,25 @@ export const AnalysisResult = ({
       <section className='results-layout'>
         <div className='results-header'>
           <div>
-            <h2 className='section-title'>Результаты анализа</h2>
+            <h2 className='section-title'>{APP_TEXT.RESULTS_TITLE}</h2>
             <p className='section-subtitle'>
-              Психологический портрет участников, динамика отношений и практические рекомендации на
-              основе вашей переписки.
+              {APP_TEXT.RESULTS_SUBTITLE}
             </p>
           </div>
           <div className='results-actions'>
             {onExportPdf && (
               <button type='button' className='btn-secondary' onClick={onExportPdf}>
-                Сохранить как PDF
+                {APP_TEXT.RESULTS_EXPORT_PDF}
               </button>
             )}
             {onExportDocx && (
               <button type='button' className='btn-secondary' onClick={onExportDocx}>
-                Скачать .docx
+                {APP_TEXT.RESULTS_EXPORT_DOCX}
               </button>
             )}
             {onNewAnalysis && (
               <button type='button' className='btn-outline' onClick={onNewAnalysis}>
-                Новый анализ
+                {APP_TEXT.RESULTS_NEW_ANALYSIS}
               </button>
             )}
           </div>
@@ -206,9 +205,9 @@ export const AnalysisResult = ({
             <FeedbackForm onSent={handleFeedbackSent} initialOpen={true} />
           ) : (
             <div className='card card--action' style={{ marginBottom: 24 }}>
-              <h3 className='card__title'>Получить бонусные анализы</h3>
+              <h3 className='card__title'>{APP_TEXT.FEEDBACK_BONUS_TITLE}</h3>
               <p className='card__text'>
-                Бесплатные анализы закончились. Вы можете оставить отзыв и получить дополнительный бонус.
+                {APP_TEXT.FEEDBACK_BONUS_DESCRIPTION}
               </p>
               <button
                 type='button'
@@ -216,7 +215,7 @@ export const AnalysisResult = ({
                 disabled={loading}
                 className='analyze-btn'
               >
-                Оставить отзыв
+                {APP_TEXT.FEEDBACK_TITLE}
               </button>
             </div>
           )
@@ -224,9 +223,9 @@ export const AnalysisResult = ({
 
         {showPaymentBlock && (
           <div className='card card--action' style={{ marginBottom: 24 }}>
-            <h3 className='card__title'>Доступ к полному анализу</h3>
+            <h3 className='card__title'>{APP_TEXT.PAYMENT_TITLE}</h3>
             <p className='card__text'>
-              Анализ представлен на 10% от общего анализа. Полный анализ будет открыт после оплаты.
+              {APP_TEXT.PAYMENT_DESCRIPTION}
             </p>
             <button
               type='button'
@@ -234,10 +233,10 @@ export const AnalysisResult = ({
               disabled={loading}
               className='analyze-btn'
             >
-              Оплатить
+              {APP_TEXT.PAYMENT_BUTTON}
             </button>
             {unlockedResult && (
-              <p className='card__hint'>Спасибо за оплату. Текст результата анализа полностью открыт</p>
+              <p className='card__hint'>{APP_TEXT.PAYMENT_SUCCESS}</p>
             )}
           </div>
         )}
@@ -256,10 +255,9 @@ export const AnalysisResult = ({
   return (
     <>
       <section className='card card--action'>
-        <h2 className='card__title'>2. Анализ</h2>
+        <h2 className='card__title'>{APP_TEXT.ANALYSIS_TITLE}</h2>
         <p className='card__text'>
-          После загрузки переписки нажмите кнопку ниже, чтобы получить психологический разбор и
-          рекомендации.
+          {APP_TEXT.ANALYSIS_DESCRIPTION}
         </p>
         {showAnalyzeButton ? (
           <button
@@ -268,7 +266,7 @@ export const AnalysisResult = ({
             disabled={loading || !canAnalyze}
             className='analyze-btn'
           >
-            {loading ? 'АНАЛИЗИРУЕМ...' : 'Проанализировать переписку'}
+            {loading ? APP_TEXT.ANALYSIS_BUTTON_LOADING : APP_TEXT.ANALYSIS_BUTTON}
             {loading ? <div className="meta-loader__spinner"/> : ''}
           </button>
         ) : (
@@ -279,13 +277,13 @@ export const AnalysisResult = ({
               disabled={loading}
               className='analyze-btn'
             >
-              Оплатить
+              {APP_TEXT.PAYMENT_BUTTON}
             </button>
             <p className='card__hint'>
-              Анализ представлен на 10% от общего анализа. Полный анализ будет открыт после оплаты.
+              {APP_TEXT.PAYMENT_DESCRIPTION}
             </p>
             {unlockedResult && (
-              <p className='card__hint'>Спасибо за оплату. Текст результата анализа полностью открыт</p>
+              <p className='card__hint'>{APP_TEXT.PAYMENT_SUCCESS}</p>
             )}
           </>
         )}
@@ -293,8 +291,8 @@ export const AnalysisResult = ({
         {!canAnalyze && (
           <p className={'card__hint' + (isOverLimit ? ' card__hint--warn' : '')}>
             {isOverLimit
-              ? 'Объём выбранного диапазона выше рекомендуемого. Уменьшите период или сузьте даты.'
-              : 'Сначала загрузите файл с перепиской.'}
+              ? APP_TEXT.ANALYSIS_HINT_OVER_LIMIT
+              : APP_TEXT.ANALYSIS_HINT_UPLOAD_FIRST}
           </p>
         )}
 
@@ -309,10 +307,10 @@ export const AnalysisResult = ({
                   rateLimitMessage
                 ) : feedbackUsed ? (
                   <>
-                    Тестовый лимит анализов исчерпан для этого устройства. Напишите <a href="mailto:antonluba@rambler.ru">нам</a>, и мы добавим Вам еще запросы.
+                    {APP_TEXT.RATE_LIMIT_CONTACT} <a href={`mailto:${APP_TEXT.RATE_LIMIT_EMAIL}`}>{APP_TEXT.RATE_LIMIT_CONTACT_SUFFIX}</a>
                   </>
                 ) : (
-                  <>Тестовый лимит анализов исчерпан для этого устройства.</>
+                  <>{APP_TEXT.RATE_LIMIT_EXHAUSTED}</>
                 )}
               </p>
             </div>
@@ -331,3 +329,4 @@ export const AnalysisResult = ({
     </>
   );
 };
+APP_TEXT

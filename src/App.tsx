@@ -172,15 +172,14 @@ const App = () => {
               {/* 🔹 Лоадер метаданных: чат уже есть, meta ещё нет */}
               {chatPayload && !meta && (
                 <section className="card meta-card meta-card--loading">
-                  <h2 className="card__title">Диапазон и объём данных</h2>
+                  <h2 className="card__title">{APP_TEXT.META_LOADING_TITLE}</h2>
                   <p className="card__text">
-                    Считаем объём переписки и диапазон дат… Это может занять
-                    немного времени при больших файлах.
+                    {APP_TEXT.META_LOADING_TEXT}
                   </p>
                   <div className="meta-loader">
                     <div className="meta-loader__spinner" />
                     <span className="meta-loader__label">
-                      Анализируем структуру чата…
+                      {APP_TEXT.META_LOADING_LABEL}
                     </span>
                   </div>
                 </section>

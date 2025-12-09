@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { APP_TEXT } from '../constants';
 import styles from './ErrorModal.module.css';
 
 interface ErrorModalProps {
@@ -22,8 +23,8 @@ export const ErrorModal = ({ isOpen, onClose, errorMessage }: ErrorModalProps) =
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>⚠️ Ошибка обработки</h2>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Закрыть">
+          <h2 className={styles.title}>{APP_TEXT.ERROR_MODAL_TITLE}</h2>
+          <button className={styles.closeBtn} onClick={onClose} aria-label={APP_TEXT.ERROR_MODAL_CLOSE}>
             ✕
           </button>
         </div>
@@ -31,13 +32,12 @@ export const ErrorModal = ({ isOpen, onClose, errorMessage }: ErrorModalProps) =
         <div className={styles.content}>
           <div className={styles.warningBox}>
             <strong className={styles.warningText}>
-              Представленный анализ не является действительным результатом работы сервиса.
+              {APP_TEXT.ERROR_MODAL_WARNING}
             </strong>
           </div>
 
           <p className={styles.message}>
-            При обработке информации произошёл сбой. Приносим свои извинения.
-            Попробуйте позже или свяжитесь с нами. Ваш запрос не был учтён, и вы можете повторить анализ.
+            {APP_TEXT.ERROR_MODAL_MESSAGE}
           </p>
 
           {errorMessage && (
@@ -46,14 +46,14 @@ export const ErrorModal = ({ isOpen, onClose, errorMessage }: ErrorModalProps) =
                 className={styles.spoilerBtn}
                 onClick={() => setShowTechnical(!showTechnical)}
               >
-                {showTechnical ? '▼' : '▶'} Техническая информация об ошибке
+                {showTechnical ? '▼' : '▶'} {APP_TEXT.ERROR_MODAL_TECHNICAL_SHOW}
               </button>
 
               {showTechnical && (
                 <div className={styles.technicalContent}>
                   <pre className={styles.errorText}>{errorMessage}</pre>
                   <button className={styles.copyBtn} onClick={handleCopyError}>
-                    📋 Скопировать
+                    {APP_TEXT.ERROR_MODAL_COPY}
                   </button>
                 </div>
               )}
@@ -63,7 +63,7 @@ export const ErrorModal = ({ isOpen, onClose, errorMessage }: ErrorModalProps) =
 
         <div className={styles.footer}>
           <button className={styles.okBtn} onClick={onClose}>
-            Понятно
+            {APP_TEXT.ERROR_MODAL_OK}
           </button>
         </div>
       </div>

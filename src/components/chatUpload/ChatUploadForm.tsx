@@ -12,6 +12,7 @@ import {
   ALLOWED_FILE_EXTENSIONS,
   PARTICIPANT_COLORS,
   CHAT_PREVIEW_LENGTH,
+  APP_TEXT,
 } from '../../constants';
 import styles from './ChatUploadForm.module.css';
 
@@ -126,18 +127,15 @@ ${content}`;
 
   return (
     <section className="card">
-      <h2 className="card__title">1. Загрузка переписки</h2>
+      <h2 className="card__title">{APP_TEXT.UPLOAD_TITLE}</h2>
       <p className="card__text">
-        Экспортируйте чат и загрузите сюда. Можно выбрать сразу несколько
-        файлов одной переписки (например, <code>messages.html</code>,{" "}
-        <code>messages1.html</code>, <code>messages2.html</code> и т.д.). Мы
-        анонимизируем имена, телефоны и e-mail перед отправкой на сервер.
+        {APP_TEXT.UPLOAD_DESCRIPTION}
       </p>
 
       {/* Красивая кнопка + подпись */}
       <div className={styles.fileInput}>
         <label className={styles.btnUpload}>
-          Выбрать файлы
+          {APP_TEXT.UPLOAD_BUTTON}
           <input
             type="file"
             accept=".txt,.html,.htm"
@@ -148,8 +146,8 @@ ${content}`;
         </label>
         <span className={styles.fileInputHint}>
           {fileNames.length === 0
-            ? "Файл не выбран"
-            : "Список выбранных файлов ниже"}
+            ? APP_TEXT.UPLOAD_NO_FILE
+            : APP_TEXT.UPLOAD_FILES_SELECTED}
         </span>
       </div>
 
@@ -157,11 +155,11 @@ ${content}`;
       {fileNames.length > 0 && (
         <div className={styles.fileList}>
           <span className={styles.fileList__label}>
-            Выбрано файлов: <strong>{fileNames.length}</strong>
+            {APP_TEXT.UPLOAD_FILES_COUNT} <strong>{fileNames.length}</strong>
             {totalSize > 0 && (
               <>
                 {" "}
-                • общий размер: <strong>{formatBytes(totalSize)}</strong>
+                • {APP_TEXT.UPLOAD_TOTAL_SIZE} <strong>{formatBytes(totalSize)}</strong>
               </>
             )}
           </span>
@@ -177,7 +175,7 @@ ${content}`;
 
       {fileStatus === "error" && (
         <p className="text-error">
-          Не удалось прочитать файлы. Попробуйте ещё раз.
+          {APP_TEXT.UPLOAD_ERROR}
         </p>
       )}
 
@@ -185,7 +183,7 @@ ${content}`;
         <div className={styles.previewGrid}>
           <div>
             <h3 className={styles.previewTitle}>
-              Оригинал (фрагмент, объединённые файлы)
+              {APP_TEXT.UPLOAD_PREVIEW_ORIGINAL}
             </h3>
             <pre className={styles.chatFragment}>
               {highlightText(rawPreview, highlightRawConfigs)}
@@ -193,7 +191,7 @@ ${content}`;
           </div>
           <div>
             <h3 className={styles.previewTitle}>
-              Анонимизированный текст (фрагмент)
+              {APP_TEXT.UPLOAD_PREVIEW_ANONYMIZED}
             </h3>
             <pre className={styles.chatFragment}>
               {highlightText(anonPreview, highlightAnonConfigs)}
@@ -204,7 +202,7 @@ ${content}`;
 
       {Object.keys(mapping).length > 0 && (
         <details className={styles.mappingDetails}>
-          <summary>Показать, кто стал кем (только локально)</summary>
+          <summary>{APP_TEXT.UPLOAD_MAPPING_SHOW}</summary>
           <ul className={styles.mappingList}>
             {Object.entries(mapping).map(([orig, alias]) => {
               const cls = PARTICIPANT_COLORS[alias] ?? "user-chip-default";

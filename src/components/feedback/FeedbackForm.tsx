@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 
 import { httpClient } from '../../api';
+import { APP_TEXT } from '../../constants';
 import styles from './FeedbackForm.module.css';
 
 interface FeedbackFormProps {
@@ -27,7 +28,7 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
     e.preventDefault();
 
     if (!text.trim()) {
-      setError("Напишите пару слов, что вам понравилось или не понравилось.");
+      setError(APP_TEXT.FEEDBACK_ERROR);
       return;
     }
 
@@ -47,7 +48,7 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
       }
     } catch (err) {
       console.error(err);
-      setError("Не получилось отправить отзыв. Попробуйте чуть позже.");
+      setError(APP_TEXT.FEEDBACK_ERROR_SUBMIT);
     } finally {
       setSubmitting(false);
     }
@@ -61,7 +62,7 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
           className={styles.feedbackBtn}
           onClick={() => setOpen(true)}
         >
-          Оставить отзыв и получить ещё несколько анализов
+          {APP_TEXT.FEEDBACK_BUTTON}
         </button>
       </section>
     );
@@ -69,34 +70,33 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
 
   return (
     <section className="card feedback-card">
-      <h2 className="card__title">Оставить отзыв</h2>
+      <h2 className="card__title">{APP_TEXT.FEEDBACK_TITLE}</h2>
       <p className="card__text">
-        Пара предложений о том, насколько полезен вам анализ, что понравилось
-        или чего не хватает. За отзыв мы начислим вам ещё несколько анализов.
+        {APP_TEXT.FEEDBACK_DESCRIPTION}
       </p>
 
       <form onSubmit={handleSubmit} className={styles.feedbackForm}>
         <label className={styles.feedbackField}>
-          <span className={styles.feedbackLabel}>Ваш отзыв</span>
+          <span className={styles.feedbackLabel}>{APP_TEXT.FEEDBACK_LABEL_TEXT}</span>
           <textarea
             className={styles.feedbackTextarea}
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
-            placeholder="Например: «Понравилось, как подробно описаны участники, но хочется ещё больше конкретных рекомендаций…»"
+            placeholder={APP_TEXT.FEEDBACK_PLACEHOLDER}
           />
         </label>
 
         <label className={styles.feedbackField}>
           <span className={styles.feedbackLabel}>
-            Контакт для связи (по желанию)
+            {APP_TEXT.FEEDBACK_LABEL_CONTACT}
           </span>
           <input
             type="text"
             className={styles.feedbackInput}
             value={contact}
             onChange={(e) => setContact(e.target.value)}
-            placeholder="@ник в Telegram или e-mail"
+            placeholder={APP_TEXT.FEEDBACK_CONTACT_PLACEHOLDER}
           />
         </label>
 
@@ -108,7 +108,7 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
             className="btn-primary"
             disabled={submitting}
           >
-            {submitting ? "Отправляем..." : "Отправить отзыв"}
+            {submitting ? APP_TEXT.FEEDBACK_SUBMITTING : APP_TEXT.FEEDBACK_SUBMIT}
           </button>
             <button
               type="button"
@@ -116,13 +116,12 @@ export const FeedbackForm = ({ onSent, initialOpen = false }: FeedbackFormProps)
               onClick={() => setOpen(false)}
               disabled={submitting}
             >
-              Отмена
+              {APP_TEXT.FEEDBACK_CANCEL}
             </button>
         </div>
 
         <p className={styles.feedbackHint}>
-          Мы не передаём отзывы третьим лицам. Они нужны только для улучшения
-          сервиса.
+          {APP_TEXT.FEEDBACK_HINT}
         </p>
       </form>
     </section>
