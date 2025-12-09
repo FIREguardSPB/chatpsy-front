@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getUsageStats, addCredits, getFullAnalysis, markPaid, type UsageStatsResponse, setLimit as setIpLimit, createPayment, deleteIp, setDefaultLimit, setFeedbackBonus } from '../../api/admin';
+import { getUsageStats, addCredits, type UsageStatsResponse, setLimit as setIpLimit, deleteIp, setDefaultLimit, setFeedbackBonus } from '../../api/admin';
 import styles from './AdminDashboard.module.css';
 
 export const AdminDashboard = () => {

@@ -1,11 +1,11 @@
 import type { AnalyzeResponse } from '../../types';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ParticipantsList } from './ParticipantsList';
 import { RelationshipCard } from './RelationshipCard';
 import { RecommendationsList } from './RecommendationsList';
 import { StatsBlock } from './StatsBlock';
 import { FeedbackForm } from '../feedback/FeedbackForm';
-import { FEEDBACK_FLAG_KEY, PARTICIPANT_COLORS } from '../../constants';
+import { FEEDBACK_FLAG_KEY } from '../../constants';
 import styles from './AnalysisResult.module.css';
 import { createPayment, getFullAnalysis } from '../../api/admin';
 
