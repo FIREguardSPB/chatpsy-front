@@ -40,11 +40,11 @@
 
 .faqImagePlaceholder {
   margin-top: auto;
-  padding: 8px;
+  padding: 6px 8px;
   border-radius: 8px;
   background-color: #f3f4f6;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #6b7280;
   text-align: center;
-  min-height: 52px;
+  min-height: 32px;
 }

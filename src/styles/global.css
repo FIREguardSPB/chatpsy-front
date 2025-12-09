@@ -2,12 +2,29 @@
 
 /* Card Components */
 .card {
+  position: relative;
   background-color: var(--bg-card);
   border-radius: 18px;
   padding: 20px 22px;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(white, white),
+    linear-gradient(90deg, var(--accent-pink), var(--accent-violet), var(--primary));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-violet), var(--primary));
+  border-radius: 18px 18px 0 0;
 }
 
 .card:hover {
@@ -20,6 +37,7 @@
   flex-direction: column;
   gap: 12px;
   height: 100%;
+  padding-top: 30px;
 }
 
 .card__title {
@@ -38,10 +56,11 @@
 }
 
 .card__hint {
-  margin: 6px 0 0;
+  margin: 10px 0 0;
   font-size: 0.85rem;
   line-height: 1.5;
   color: #9ca3af;
+  text-align: center;
 }
 
 .card__hint--warn {
