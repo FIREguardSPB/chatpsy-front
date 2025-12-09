@@ -1,0 +1,68 @@
+/* App Component Styles */
+
+.analyzeModal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 40;
+  pointer-events: auto;
+}
+
+.analyzeModal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top,
+    rgba(15, 23, 42, 0.62),
+    rgba(15, 23, 42, 0.85)
+  );
+  opacity: 0.9;
+  backdrop-filter: blur(6px);
+}
+
+.analyzeModal__panel {
+  position: relative;
+  z-index: 41;
+  max-width: 460px;
+  width: 100%;
+  margin: 80px 16px 0;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: #0b1220;
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.55);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  color: #e5e7eb;
+}
+
+.analyzeModal__spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.4);
+  border-top-color: #f97316;
+  border-right-color: #6366f1;
+  animation: analyze-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes analyze-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.analyzeModal__text h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.analyzeModal__text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}

@@ -1,0 +1,9 @@
+.adminRoot{padding:24px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:16px}
+.row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.rowGap{display:flex;gap:8px;margin:8px 0}
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table th,.table td{border:1px solid #e5e7eb;padding:6px;text-align:left}
+.error{color:#b91c1c}
+.info{color:#374151}
+.pre{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:8px;white-space:pre-wrap;word-break:break-word}

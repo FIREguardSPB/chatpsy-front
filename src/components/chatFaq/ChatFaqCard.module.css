@@ -1,0 +1,50 @@
+/* ChatFaqCard Component Styles */
+
+.faqCard {
+  margin-top: 16px;
+}
+
+.faqColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .faqColumns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faqBlock {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.faqTitle {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.faqSteps {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+}
+
+.faqSteps li {
+  margin-bottom: 2px;
+}
+
+.faqImagePlaceholder {
+  margin-top: auto;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: center;
+  min-height: 52px;
+}

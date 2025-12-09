@@ -1,0 +1,178 @@
+/* ChatUploadForm Component Styles */
+
+.fileInput {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btnUpload {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-image: linear-gradient(
+    90deg,
+    var(--accent-pink),
+    var(--accent-violet),
+    var(--primary)
+  );
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.35);
+  transition:
+    transform 0.12s ease-out,
+    box-shadow 0.12s ease-out,
+    opacity 0.12s ease-out;
+}
+
+.btnUpload:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.4);
+}
+
+.btnUpload:active {
+  transform: translateY(1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+}
+
+.fileInputNative {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fileInputHint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.fileList {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.fileList__label {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.fileList__items {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.fileList__item {
+  margin: 0;
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.previewGrid > div {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .previewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.previewTitle {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.chatFragment {
+  position: relative;
+  margin-top: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fdfbff 0%, #ffffff 100%);
+  border: 2px solid #e8e9f3;
+  max-height: 280px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #374151;
+  box-sizing: border-box;
+  width: 100%;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 2px 8px rgba(37, 99, 235, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    0 0 0 1px rgba(168, 85, 247, 0.2);
+}
+
+.chatFragment:hover {
+  box-shadow: 
+    0 4px 16px rgba(37, 99, 235, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    0 0 0 2px rgba(168, 85, 247, 0.35);
+}
+
+.chatFragment::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.chatFragment::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+  margin: 4px;
+}
+
+.chatFragment::-webkit-scrollbar-track:horizontal {
+  margin: 0 4px;
+}
+
+.chatFragment::-webkit-scrollbar-track:vertical {
+  margin: 4px 0;
+}
+
+.chatFragment::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ec4899, #a855f7, #2563eb);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.chatFragment::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #db2777, #9333ea, #1d4ed8);
+}
+
+.mappingDetails {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.mappingDetails summary {
+  cursor: pointer;
+  color: #2563eb;
+}
+
+.mappingList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}

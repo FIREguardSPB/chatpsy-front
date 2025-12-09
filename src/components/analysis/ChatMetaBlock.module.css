@@ -1,0 +1,204 @@
+/* ChatMetaBlock Component Styles */
+
+.metaCard {
+  margin-top: 14px;
+}
+
+.metaRange {
+  margin-top: 10px;
+}
+
+.metaRange__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.metaRange__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fdfbff 0%, #ffffff 100%);
+  border: 2px solid #e8e9f3;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 2px 8px rgba(37, 99, 235, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.metaRange__field::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    #ec4899,
+    #a855f7,
+    #2563eb
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metaRange__field:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(37, 99, 235, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.metaRange__field:hover::before,
+.metaRange__field:focus-within::before {
+  opacity: 0.6;
+}
+
+.metaRange__field:focus-within {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 
+    0 6px 20px rgba(37, 99, 235, 0.18),
+    0 0 0 4px rgba(168, 85, 247, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.metaRange__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+  min-width: 22px;
+  text-align: center;
+}
+
+.metaRange__field:hover .metaRange__label,
+.metaRange__field:focus-within .metaRange__label {
+  opacity: 1;
+}
+
+.metaRange__field input[type='date'] {
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 2px 0;
+  outline: none;
+  color: #1f2937;
+  cursor: pointer;
+  min-width: 130px;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.metaRange__field:hover input[type='date'],
+.metaRange__field:focus-within input[type='date'] {
+  color: #111827;
+}
+
+.metaRange__field input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+  filter: 
+    brightness(0) 
+    saturate(100%) 
+    invert(38%) 
+    sepia(78%) 
+    saturate(2476%) 
+    hue-rotate(231deg) 
+    brightness(93%) 
+    contrast(96%);
+}
+
+.metaRange__field:hover input[type='date']::-webkit-calendar-picker-indicator,
+.metaRange__field input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.metaRange__hint,
+.metaRange__limit {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.metaStatsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.metaStat {
+  flex: 1 1 140px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+}
+
+.metaStat__label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.metaStat__value {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.metaStat__value--warn {
+  color: #b91c1c;
+}
+
+.metaCardLoading {
+  display: flex;
+  flex-direction: column;
+}
+
+.metaLoader {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 9999px;
+  background: #f3f4ff;
+  border: 1px solid rgba(129, 140, 248, 0.5);
+}
+
+.metaLoader__spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  border: 2px solid rgba(129, 140, 248, 0.4);
+  border-top-color: #4f46e5;
+  animation: meta-spin 0.9s linear infinite;
+}
+
+.metaLoader__label {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+@keyframes meta-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
