@@ -28,6 +28,7 @@ interface AnalysisResultProps {
   paymentTestMode?: boolean;
   onFeedbackSent?: (granted: number) => void;
   nameMapping?: Record<string, string>;
+  hasFileUploaded?: boolean; // Новое свойство
 }
 
 export const AnalysisResult = ({
@@ -46,16 +47,17 @@ export const AnalysisResult = ({
   paymentTestMode = false,
   onFeedbackSent,
   nameMapping,
+  hasFileUploaded, // Новое свойство
 }: AnalysisResultProps) => {
   const [unlockedResult, setUnlockedResult] = useState<AnalyzeResponse | null>(null);
   const effectiveResult = unlockedResult ?? result;
   const isPreview = !!effectiveResult?.is_preview;
   const paymentRequired = !!effectiveResult?.payment_required;
   const hasAnalysisId = !!effectiveResult?.analysis_id;
-  
+
   // Читаем флаг напрямую из localStorage при каждом рендере
-  const feedbackUsed = typeof window !== 'undefined' 
-    ? window.localStorage.getItem(FEEDBACK_FLAG_KEY) === '1' 
+  const feedbackUsed = typeof window !== 'undefined'
+    ? window.localStorage.getItem(FEEDBACK_FLAG_KEY) === '1'
     : false;
 
   const showAnalyzeButton =
@@ -173,27 +175,27 @@ export const AnalysisResult = ({
   // -------- Экран результатов --------
   if (mode === 'results' && effectiveResult) {
     return (
-      <section className='results-layout'>
-        <div className='results-header'>
+      <section className={styles.resultsLayout}>
+        <div className={styles.resultsHeader}>
           <div>
-            <h2 className='section-title'>{APP_TEXT.RESULTS_TITLE}</h2>
-            <p className='section-subtitle'>
+            <h2 className={styles.sectionTitle}>{APP_TEXT.RESULTS_TITLE}</h2>
+            <p className={styles.sectionSubtitle}>
               {APP_TEXT.RESULTS_SUBTITLE}
             </p>
           </div>
-          <div className='results-actions'>
+          <div className={styles.resultsActions}>
             {onExportPdf && (
-              <button type='button' className='btn-secondary' onClick={onExportPdf}>
+              <button type='button' className={styles.btnSecondary} onClick={onExportPdf}>
                 {APP_TEXT.RESULTS_EXPORT_PDF}
               </button>
             )}
             {onExportDocx && (
-              <button type='button' className='btn-secondary' onClick={onExportDocx}>
+              <button type='button' className={styles.btnSecondary} onClick={onExportDocx}>
                 {APP_TEXT.RESULTS_EXPORT_DOCX}
               </button>
             )}
             {onNewAnalysis && (
-              <button type='button' className='btn-outline' onClick={onNewAnalysis}>
+              <button type='button' className={styles.btnOutline} onClick={onNewAnalysis}>
                 {APP_TEXT.RESULTS_NEW_ANALYSIS}
               </button>
             )}
@@ -204,9 +206,9 @@ export const AnalysisResult = ({
           showFeedbackForm ? (
             <FeedbackForm onSent={handleFeedbackSent} initialOpen={true} />
           ) : (
-            <div className='card card--action' style={{ marginBottom: 24 }}>
-              <h3 className='card__title'>{APP_TEXT.FEEDBACK_BONUS_TITLE}</h3>
-              <p className='card__text'>
+            <div className={styles.card + ' card--action'} style={{ marginBottom: 24 }}>
+              <h3 className={styles.card__title}>{APP_TEXT.FEEDBACK_BONUS_TITLE}</h3>
+              <p className={styles.card__text}>
                 {APP_TEXT.FEEDBACK_BONUS_DESCRIPTION}
               </p>
               <button
@@ -288,11 +290,21 @@ export const AnalysisResult = ({
           </>
         )}
 
+        {/* Удалено: старая логика отображения сообщений */}
+        {/* 
         {!canAnalyze && (
           <p className={'card__hint' + (isOverLimit ? ' card__hint--warn' : '')}>
             {isOverLimit
               ? APP_TEXT.ANALYSIS_HINT_OVER_LIMIT
               : APP_TEXT.ANALYSIS_HINT_UPLOAD_FIRST}
+          </p>
+        )}
+        */}
+
+        {/* Новое сообщение под кнопкой анализа - только при превышении лимита и наличии файла */}
+        {hasFileUploaded && isOverLimit && (
+          <p className="card__hint card__hint--warn">
+            Сократите период выборки
           </p>
         )}
 

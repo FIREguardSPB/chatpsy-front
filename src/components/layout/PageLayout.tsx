@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { APP_TEXT } from '../../constants';
+import { ThemeToggle } from './ThemeToggle';
 import styles from './PageLayout.module.css';
 
 interface PageLayoutProps {
@@ -13,14 +14,16 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
       <div className={styles.appRoot}>
         <header className={styles.appTopbar}>
           <div className={styles.appTopbar__brand}>
-            <div className={styles.appTopbar__logo}>ψ</div>
+            <a href="/" className={styles.appTopbar__logoLink}>
+              <div className={styles.appTopbar__logo}>ψ</div>
+            </a>
             <div className={styles.appTopbar__name}>
               {APP_TEXT.APP_NAME}{' '}
               <span className={styles.appTopbar__beta}>{APP_TEXT.APP_BETA}</span>
             </div>
           </div>
           <div className={styles.appTopbar__right}>
-            {APP_TEXT.APP_TAGLINE}
+            <ThemeToggle />
           </div>
         </header>
 

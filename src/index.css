@@ -5,19 +5,36 @@
   --accent-violet: #a855f7;
   --accent-pink: #ec4899;
 
-  --bg-body: #eef2ff;
-  --bg-shell: #f9fafb;
-  --bg-card: #ffffff;
-
-  --text-main: #111827;
-  --text-muted: #6b7280;
-
   /* Подложки для участников */
   --chip-user1: rgba(59, 130, 246, 0.16);
   --chip-user2: rgba(236, 72, 153, 0.16);
   --chip-user3: rgba(168, 85, 247, 0.16);
   --chip-user4: rgba(56, 189, 248, 0.16);
   --chip-user5: rgba(34, 197, 94, 0.16);
+}
+
+/* Темная тема по умолчанию */
+:root {
+  --bg-body: #000000;
+  --bg-shell: #000000;
+  --bg-card: #000000;
+  --text-main: #ffffff;
+  --text-muted: #e2e8f0;
+  --border-color: rgba(226, 232, 240, 0.2);
+  --result-header: #000000;
+  --participant-card__summary: #f9fafb;
+}
+
+/* Светлая тема */
+:root[data-theme="light"] {
+  --result-header: #02031a;
+  --bg-body: #eef2ff;
+  --bg-shell: #f9fafb;
+  --bg-card: #ffffff;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border-color: rgba(226, 232, 240, 0.8);
+  --participant-card__summary: #000000;
 }
 
 *,
@@ -37,10 +54,8 @@ body,
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text-main);
-  /* мягкий фон по краям страницы */
-  background:
-          radial-gradient(circle at top, #dbeafe 0, #eef2ff 35%, #e5e7eb 70%),
-          linear-gradient(to bottom, #f3f4ff, #f9fafb);
+  background: var(--bg-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ---------- Каркас приложения ---------- */
@@ -171,10 +186,19 @@ body {
 
 /* ---------- Сетка контента ---------- */
 .content-grid {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: 20px;
   align-items: flex-start; /* чтобы колонки не растягивались друг под друга */
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .content-column {
@@ -193,61 +217,6 @@ body {
 .content-grid > * > .card {
   height: 100%;
   box-sizing: border-box;
-}
-
-/* ---------- Карточки ---------- */
-
-.card {
-  position: relative;
-  background-color: var(--bg-card);
-  border-radius: 18px;
-  padding: 18px 20px;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-  border: 2px solid transparent;
-  background-image: 
-    linear-gradient(white, white),
-    linear-gradient(90deg, var(--accent-pink), var(--accent-violet), var(--primary));
-  background-origin: padding-box, border-box;
-  background-clip: padding-box, border-box;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 10px;
-  background: linear-gradient(90deg, var(--accent-pink), var(--accent-violet), var(--primary));
-  border-radius: 18px 18px 0 0;
-}
-
-.card--action {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  padding-top: 28px;
-}
-
-.card__title {
-  margin: 0 0 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--primary-dark);
-}
-
-.card__text {
-  margin: 0 0 8px;
-  font-size: 0.95rem;
-  color: #4b5563;
-}
-
-.card__hint {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
-  color: #9ca3af;
-  text-align: center;
 }
 
 /* ---------- Загрузка файлов ---------- */
@@ -439,7 +408,7 @@ body {
 .participant-card {
   border-radius: 14px;
   border: 1px solid rgba(37, 99, 235, 0.18);
-  background: var(--bg-card);
+  background: var(--bg-card) !important;
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.06);
   padding: 14px 16px;
 }
@@ -449,14 +418,12 @@ body {
   font-weight: 600;
   color: var(--primary-dark);
 }
-.participant-card__summary {
-  margin: 0 8px 8px 0;
-  color: #374151;
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
+
 .traits-list { margin: 0; padding-left: 18px; }
-.traits-list__label { color: #6b7280; }
+.traits-list__label {
+  font-weight: 600;
+  color: var(--accent-pink);
+}
 
 /* ---------- Стили ссылок в оповещении лимита ---------- */
 .rateLimitAlert__text a {
@@ -566,7 +533,7 @@ body {
 .participant-card__summary {
   margin: 0 0 6px;
   font-size: 0.9rem;
-  color: #4b5563;
+  color: var(--participant-card__summary);
 }
 
 .traits-list {
@@ -619,7 +586,7 @@ body {
 .recommendation-item__text {
   margin: 0;
   font-size: 0.9rem;
-  color: #4b5563;
+  color: var(--text-muted);
 }
 
 /* ---------- Статистика ---------- */
@@ -643,17 +610,17 @@ body {
   gap: 14px;
 }
 
-.results-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-  border: 1px solid #e5e7eb;
-}
+/*.results-header {*/
+/*  display: flex;*/
+/*  align-items: flex-start;*/
+/*  justify-content: space-between;*/
+/*  gap: 16px;*/
+/*  padding: 16px 20px;*/
+/*  border-radius: 18px;*/
+/*  background: #ffffff;*/
+/*  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);*/
+/*  border: 1px solid #e5e7eb;*/
+/*}*/
 
 .results-actions {
   display: flex;
@@ -677,47 +644,6 @@ body {
   .results-grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* Кнопки в хедере результатов */
-
-.btn-secondary,
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-  padding: 0 16px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border: 1px solid transparent;
-  background: #ffffff;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.12s,
-  transform 0.12s;
-}
-
-.btn-secondary {
-  background: #eef2ff;
-  border-color: #c7d2fe;
-  color: var(--primary-dark);
-}
-
-.btn-secondary:hover {
-  background: #e0e7ff;
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.2);
-  transform: translateY(-1px);
-}
-
-.btn-outline {
-  background: transparent;
-  border-color: rgba(148, 163, 184, 0.6);
-  color: var(--text-main);
-}
-
-.btn-outline:hover {
-  background: #f3f4f6;
 }
 
 /* Misc */

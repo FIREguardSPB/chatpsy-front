@@ -60,7 +60,7 @@
 .fileList {
   margin-top: 10px;
   font-size: 0.85rem;
-  color: #4b5563;
+  color: var(--text-main);
 }
 
 .fileList__label {
@@ -104,31 +104,32 @@
 }
 
 .chatFragment {
-  position: relative;
-  margin-top: 10px;
-  padding: 16px 18px;
+  /*position: relative;*/
+  margin-top: 8px;
+  padding: 12px 14px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #fdfbff 0%, #ffffff 100%);
-  border: 2px solid #e8e9f3;
-  max-height: 280px;
+  background: #E7E9F8;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(148,163,184,.6);
+  max-height: 260px;
   overflow: auto;
   white-space: pre-wrap;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
   color: #374151;
   box-sizing: border-box;
   width: 100%;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 2px 8px rgba(37, 99, 235, 0.06),
-    inset 0 1px 2px rgba(255, 255, 255, 0.8),
-    0 0 0 1px rgba(168, 85, 247, 0.2);
+  /*transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);*/
+  /*box-shadow:*/
+  /*  0 2px 8px rgba(37, 99, 235, 0.06),*/
+  /*  inset 0 1px 2px rgba(255, 255, 255, 0.8),*/
+  /*  0 0 0 1px rgba(168, 85, 247, 0.2);*/
 }
 
 .chatFragment:hover {
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(37, 99, 235, 0.12),
     inset 0 1px 2px rgba(255, 255, 255, 0.9),
     0 0 0 2px rgba(168, 85, 247, 0.35);
