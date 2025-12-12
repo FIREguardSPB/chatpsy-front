@@ -38,7 +38,7 @@
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .arrowDown {
@@ -49,10 +49,129 @@
   border-bottom: 5px solid var(--text-main);
 }
 
+.instructionsContainer {
+  overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .instructionsContent {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
+}
+
+.detailedInstructions {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.instructionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: var(--primary-dark);
+  line-height: 1.3;
+}
+
+.instructionSection {
+  margin-bottom: 24px;
+}
+
+.instructionStep {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+}
+
+.instructionStep::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-right: 10px;
+}
+
+.instructionText {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+}
+
+.messengerInstructions {
+  margin-bottom: 16px;
+}
+
+.messengerTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--primary-dark);
+}
+
+.instructionList {
+  margin: 0 0 16px 20px;
+  padding-left: 0;
+}
+
+.instructionList li {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.instructionList li::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-pink);
+}
+
+.subItemList {
+  margin: 8px 0 8px 20px;
+  padding-left: 0;
+}
+
+.subItemList li {
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.subItemList li::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-violet);
+}
+
+.bulletList {
+  margin: 0 0 16px 20px;
+  padding-left: 0;
+}
+
+.bulletList li {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.bulletList li::before {
+  content: '•';
+  position: absolute;
+  left: -16px;
+  top: 0;
+  color: var(--primary);
+  font-weight: bold;
 }
 
 .bottomCollapse {
