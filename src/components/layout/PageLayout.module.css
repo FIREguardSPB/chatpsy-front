@@ -34,6 +34,51 @@
   gap: 10px;
 }
 
+.appTopbar__logoLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.appTopbar__logoLink:hover {
+  transform: scale(1.15);
+}
+
+.appTopbar__logoLink:hover .appTopbar__logo::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(236, 72, 153, 0.4) 0%,
+    rgba(168, 85, 247, 0.2) 70%,
+    transparent 100%
+  );
+  transform: translate(-50%, -50%);
+  animation: ripple 1.5s ease-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.7;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
 .appTopbar__logo {
   width: 26px;
   height: 26px;
@@ -45,6 +90,12 @@
   color: #ffffff;
   font-size: 16px;
   font-weight: 700;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.appTopbar__logoLink:hover .appTopbar__logo {
+  transform: scale(1.1);
 }
 
 .appTopbar__name {

@@ -25,17 +25,17 @@ export const ParticipantsList = ({ participants, nameMapping }: ParticipantsList
   return (
     <section className="card">
       <h2 className="card__title">Психологические портреты</h2>
-      
+
       {/* Легенда маппинга имён */}
       {hasMapping && (
         <details style={{ marginBottom: '16px', cursor: 'pointer' }}>
-          <summary style={{ 
-            fontSize: '0.9rem', 
+          <summary style={{
+            fontSize: '0.9rem',
             color: '#6366f1',
             fontWeight: 600,
             userSelect: 'none'
           }}>
-            Показать, кто стал кем (только локально)
+            Показать, у кого какой псевдоним
           </summary>
           <ul style={{
             marginTop: '8px',

@@ -89,7 +89,7 @@ const App = () => {
     setRateLimitMessage(null);
     setErrorModalOpen(false);
     setErrorMessage(null);
-    
+
     await analyze(chatPayload.anonymizedText, rangeFrom, rangeTo);
   };
 
@@ -148,67 +148,63 @@ const App = () => {
           </div>
         </div>
       )}
-
+      <ChatFaqCard />
       {/* Экран загрузки + анализ + мета + FAQ */}
       <div style={{ display: !result ? 'block' : 'none' }}>
-        <div className="content-grid">
-          <div className="content-column">
+        <div className='content-grid'>
+          <div className='content-column'>
             <ChatUploadForm onChatReady={handleChatReady} key={chatUploadKey} />
           </div>
 
-            <div className="content-column">
-              <AnalysisResult
-                mode="inline"
-                result={null}
-                loading={loading}
-                onAnalyzeClick={handleAnalyze}
-                canAnalyze={canAnalyze}
-                rateLimitMessage={paymentEnabled ? null : rateLimitMessage}
-                messageType={messageType}
-                paymentEnabled={paymentEnabled}
-                paymentTestMode={paymentTestMode}
+          <div className='content-column'>
+            <AnalysisResult
+              mode='inline'
+              result={null}
+              loading={loading}
+              onAnalyzeClick={handleAnalyze}
+              canAnalyze={canAnalyze}
+              rateLimitMessage={paymentEnabled ? null : rateLimitMessage}
+              messageType={messageType}
+              paymentEnabled={paymentEnabled}
+              paymentTestMode={paymentTestMode}
+              hasFileUploaded={!!chatPayload}
+              isOverLimit={isOverLimit ?? undefined}
+            />
+
+            {/* 🔹 Лоадер метаданных: чат уже есть, meta ещё нет */}
+            {chatPayload && !meta && (
+              <section className='card meta-card meta-card--loading'>
+                <h2 className='card__title'>{APP_TEXT.META_LOADING_TITLE}</h2>
+                <p className='card__text'>{APP_TEXT.META_LOADING_TEXT}</p>
+                <div className='meta-loader'>
+                  <div className='meta-loader__spinner' />
+                  <span className='meta-loader__label'>{APP_TEXT.META_LOADING_LABEL}</span>
+                </div>
+              </section>
+            )}
+
+            {/* форма отзыва — блок под кнопкой анализа */}
+            {shouldShowFeedbackForm && (
+              <FeedbackForm onSent={handleFeedbackSent} initialOpen={true} />
+            )}
+
+            {/* блок диапазона/объёма */}
+            {meta && (
+              <ChatMetaBlock
+                meta={meta}
+                rangeFrom={rangeFrom}
+                rangeTo={rangeTo}
+                onRangeChange={handleRangeChange}
               />
-
-              {/* 🔹 Лоадер метаданных: чат уже есть, meta ещё нет */}
-              {chatPayload && !meta && (
-                <section className="card meta-card meta-card--loading">
-                  <h2 className="card__title">{APP_TEXT.META_LOADING_TITLE}</h2>
-                  <p className="card__text">
-                    {APP_TEXT.META_LOADING_TEXT}
-                  </p>
-                  <div className="meta-loader">
-                    <div className="meta-loader__spinner" />
-                    <span className="meta-loader__label">
-                      {APP_TEXT.META_LOADING_LABEL}
-                    </span>
-                  </div>
-                </section>
-              )}
-
-              {/* форма отзыва — блок под кнопкой анализа */}
-              {shouldShowFeedbackForm && (
-                <FeedbackForm onSent={handleFeedbackSent} initialOpen={true} />
-              )}
-
-              {/* блок диапазона/объёма */}
-              {meta && (
-                <ChatMetaBlock
-                  meta={meta}
-                  rangeFrom={rangeFrom}
-                  rangeTo={rangeTo}
-                  onRangeChange={handleRangeChange}
-                />
-              )}
-            </div>
+            )}
           </div>
-
-          <ChatFaqCard />
         </div>
+      </div>
 
       {/* Экран результатов */}
       <div style={{ display: result ? 'block' : 'none' }}>
         <AnalysisResult
-          mode="results"
+          mode='results'
           result={result}
           loading={loading}
           onAnalyzeClick={handleAnalyze}

@@ -49,7 +49,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(239, 68, 68, 0.15),
     0 0 0 1px rgba(239, 68, 68, 0.1);
   animation: alert-appear 0.3s ease-out;
@@ -94,7 +94,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(34, 197, 94, 0.15),
     0 0 0 1px rgba(34, 197, 94, 0.1);
   animation: alert-appear 0.3s ease-out;
@@ -133,7 +133,7 @@
   gap: 16px;
   padding: 16px 20px;
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--bg-card);
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
   border: 1px solid #e5e7eb;
 }
@@ -160,6 +160,55 @@
   .resultsGrid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Кнопки в хедере результатов */
+
+.btnSecondary,
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btnSecondary {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: var(--primary-dark);
+}
+
+.btnSecondary:hover {
+  background: var(--primary-dark);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.2);
+  transform: translateY(-3px);
+}
+
+.btnOutline {
+  color: #ffffff;
+  background-image: linear-gradient(
+          90deg,
+          var(--accent-pink),
+          var(--accent-violet),
+          var(--primary)
+  );
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+  transition:
+          transform 0.12s ease-out,
+          box-shadow 0.12s ease-out,
+          opacity 0.12s ease-out;
+}
+
+.btnOutline:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 35px rgba(37, 99, 235, 0.4);
 }
 
 .alert {
@@ -192,6 +241,7 @@
   border: 1px solid #e5e7eb;
   padding: 10px 12px;
   background-color: #f9fafb;
+  color: var(--text-muted);
 }
 
 .participantCard__name {
@@ -202,7 +252,7 @@
 .participantCard__summary {
   margin: 0 0 6px;
   font-size: 0.9rem;
-  color: #4b5563;
+  color: var(--text-muted);
 }
 
 .traitsList {
@@ -214,6 +264,7 @@
 
 .traitsList__label {
   font-weight: 600;
+  color: var(--accent-pink);
 }
 
 .pill {
