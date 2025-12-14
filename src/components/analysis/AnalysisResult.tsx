@@ -1,5 +1,6 @@
-import type { AnalyzeResponse } from '../../types';
 import { useEffect, useState } from 'react';
+
+import type { AnalyzeResponse } from '../../types';
 import { ParticipantsList } from './ParticipantsList';
 import { RelationshipCard } from './RelationshipCard';
 import { RecommendationsList } from './RecommendationsList';
@@ -103,7 +104,7 @@ export const AnalysisResult = ({
 
   const showFeedbackBlock =
     paymentEnabled && isPreview && paymentRequired && hasAnalysisId &&
-    feedbackBonus > 0 && myStats && myStats.feedback_bonus_used === false;
+    feedbackBonus > 0 && myStats && !myStats.feedback_bonus_used;
 
   const showPaymentBlock =
     paymentEnabled && isPreview && paymentRequired && hasAnalysisId && !showFeedbackBlock;
@@ -291,7 +292,7 @@ export const AnalysisResult = ({
         )}
 
         {/* Удалено: старая логика отображения сообщений */}
-        {/* 
+        {/*
         {!canAnalyze && (
           <p className={'card__hint' + (isOverLimit ? ' card__hint--warn' : '')}>
             {isOverLimit

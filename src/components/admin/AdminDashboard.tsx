@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+
 import { getUsageStats, addCredits, type UsageStatsResponse, setLimit as setIpLimit, deleteIp, setDefaultLimit, setFeedbackBonus } from '../../api/admin';
 import styles from './AdminDashboard.module.css';
 
@@ -16,6 +17,17 @@ export const AdminDashboard = () => {
   const [defaultBonus, setDefaultBonus] = useState<number>(0);
 
   const canAdmin = useMemo(() => token.trim().length > 0, [token]);
+
+  const formatDate = new Intl.DateTimeFormat('ru-RU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Moscow'
+  });
 
   const refreshStats = async () => {
     setLoading(true);
@@ -136,19 +148,19 @@ export const AdminDashboard = () => {
     }
   };
 
-  const toggleIp = (ip: string) => {
+  const toggleIp = (ipItem: string) => {
     setSelectedIps((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(ip)) {
-        newSet.delete(ip);
+      if (newSet.has(ipItem)) {
+        newSet.delete(ipItem);
       } else {
-        newSet.add(ip);
+        newSet.add(ipItem);
       }
       return newSet;
     });
   };
 
-  return (
+ return (
     <div className={styles.adminRoot}>
       <section className={styles.card}>
         <h2>Admin</h2>
@@ -195,7 +207,7 @@ export const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {stats.clients.map((c) => (
+              {stats.clients.sort((a, b) => b?.last_seen?.localeCompare(a?.last_seen ?? '') ?? 0).map((c) => (
                 <tr key={c.ip}>
                   <td>
                     <input
@@ -210,8 +222,8 @@ export const AdminDashboard = () => {
                   <td>{c.analyze_used}</td>
                   <td>{c.analyze_limit}</td>
                   <td>{String(c.feedback_bonus_used)}</td>
-                  <td>{c.first_seen ?? '-'}</td>
-                  <td>{c.last_seen ?? '-'}</td>
+                  <td>{formatDate.format(new Date(c.first_seen || '')) ?? '-'}</td>
+                  <td>{formatDate.format(new Date(c.last_seen || '')) ?? '-'}</td>
                 </tr>
               ))}
             </tbody>

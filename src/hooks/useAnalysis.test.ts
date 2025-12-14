@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
+
 import { useAnalysis } from './useAnalysis';
 import * as chatAnalyzerApi from '../api/chatAnalyzer';
 
@@ -12,7 +13,7 @@ describe('useAnalysis', () => {
 
   it('should initialize with no result and not loading', () => {
     const { result } = renderHook(() => useAnalysis({}));
-    
+
     expect(result.current.result).toBeNull();
     expect(result.current.loading).toBe(false);
   });

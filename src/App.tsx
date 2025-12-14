@@ -10,6 +10,8 @@ import {
   AdminDashboard,
 } from './components';
 import { ErrorModal } from './components/ErrorModal';
+import { ZipErrorModal } from './components/ZipErrorModal';
+import { TimeoutErrorModal } from './components/TimeoutErrorModal';
 import { useAnalysis, useChatMeta, useFeedback } from './hooks';
 import { estimateRangeBytes } from './utils';
 import { APP_TEXT } from './constants';
@@ -17,20 +19,55 @@ import type { ChatPayload } from './types';
 import styles from './App.module.css';
 
 const App = () => {
-  const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
-  if (isAdmin) {
-    return <AdminDashboard />;
-  }
+  // Хуки объявляем в самом начале, до условного return
   const [paymentEnabled, setPaymentEnabled] = useState(false);
   const [chatPayload, setChatPayload] = useState<ChatPayload | null>(null);
   const [rateLimitMessage, setRateLimitMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<'error' | 'success'>('error');
   const [paymentTestMode, setPaymentTestMode] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [zipErrorModalOpen, setZipErrorModalOpen] = useState(false);
+  const [timeoutErrorModalOpen, setTimeoutErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [chatUploadKey, setChatUploadKey] = useState(0);
-  // Load payment_enabled from backend on mount
+
+  // Подключаем пользовательские хуки (анализ и получение метаданных)
+  const { result, loading, analyze, resetResult } = useAnalysis({
+    onRateLimitError: (msg) => {
+      setMessageType('error');
+      setRateLimitMessage(msg);
+    },
+    onError: (error) => {
+      // Обработка таймаутов и других ошибок
+      if (
+        error.name === 'TimeoutError' ||
+        error.message.includes('timeout') ||
+        error.message.includes('Timeout') ||
+        error.message.includes('ECONNABORTED')
+      ) {
+        setTimeoutErrorModalOpen(true);
+      } else {
+        setErrorMessage(error.message || 'Unknown error');
+        setErrorModalOpen(true);
+      }
+    },
+  });
+
+  const {
+    meta,
+    rangeFrom,
+    rangeTo,
+    fetchMeta,
+    handleRangeChange: updateRange,
+    resetMeta,
+    loading: metaLoading,
+    error: metaError,
+  } = useChatMeta();
+
+  const { markFeedbackUsed, shouldShowFeedback } = useFeedback();
+
+  // Загружаем конфиг при монтировании
   useEffect(() => {
     fetch('/debug/config')
       .then((r) => r.json())
@@ -44,14 +81,7 @@ const App = () => {
       });
   }, []);
 
-  const { result, loading, analyze, resetResult } = useAnalysis({
-    onRateLimitError: (msg) => {
-      setMessageType('error');
-      setRateLimitMessage(msg);
-    },
-  });
-
-  // Отслеживаем изменения result и проверяем на is_fallback
+  // Отслеживаем ошибки из анализа
   useEffect(() => {
     if (result?.is_fallback) {
       console.error('LLM Analysis Failed:', result.error_message);
@@ -60,22 +90,29 @@ const App = () => {
     }
   }, [result]);
 
-  const { meta, rangeFrom, rangeTo, fetchMeta, handleRangeChange: updateRange, resetMeta, loading: metaLoading } =
-    useChatMeta();
+  // Отслеживаем ошибки из useChatMeta
+  useEffect(() => {
+    if (metaError) {
+      if (
+        metaError.name === 'TimeoutError' ||
+        metaError.message.includes('timeout') ||
+        metaError.message.includes('Timeout') ||
+        metaError.message.includes('ECONNABORTED')
+      ) {
+        setTimeoutErrorModalOpen(true);
+      } else {
+        setErrorMessage(metaError.message || 'Unknown error');
+        setErrorModalOpen(true);
+      }
+    }
+  }, [metaError]);
 
-  const { markFeedbackUsed, shouldShowFeedback } = useFeedback();
-
-  const approxBytes =
-    meta ? estimateRangeBytes(meta, rangeFrom, rangeTo) : null;
-  const isOverLimit =
-    meta && approxBytes !== null && approxBytes > meta.recommended_bytes;
-
+  // Обработчики событий
   const handleChatReady = async (payload: ChatPayload) => {
     setChatPayload(payload);
     resetResult();
     resetMeta();
     setRateLimitMessage(null);
-
     await fetchMeta(payload.anonymizedText);
   };
 
@@ -84,6 +121,8 @@ const App = () => {
   };
 
   const handleAnalyze = async () => {
+    const approxBytes = meta ? estimateRangeBytes(meta, rangeFrom, rangeTo) : null;
+    const isOverLimit = meta && approxBytes !== null && approxBytes > meta.recommended_bytes;
     if (!chatPayload || loading || metaLoading || isOverLimit) return;
 
     setRateLimitMessage(null);
@@ -97,19 +136,15 @@ const App = () => {
     resetResult();
     setChatPayload(null);
     resetMeta();
-    // Сбрасываем ChatUploadForm, чтобы он забыл предыдущий файл
-    setChatUploadKey(prev => prev + 1);
+    setChatUploadKey((prev) => prev + 1);
   };
 
   const handleExportPdf = () => {
     window.print();
   };
 
-  const canAnalyze = !!chatPayload && !isOverLimit && !loading && !metaLoading;
-
   const handleFeedbackSent = (granted: number) => {
     markFeedbackUsed(granted);
-
     setMessageType('success');
     setRateLimitMessage(
       granted > 0
@@ -119,8 +154,6 @@ const App = () => {
   };
 
   const handleFeedbackSentInResults = (granted: number) => {
-    // Сбрасываем результат, возвращаемся на стартовый экран
-    // chatPayload и ChatUploadForm сохраняют состояние файла
     resetResult();
     setMessageType('success');
     setRateLimitMessage(
@@ -131,12 +164,39 @@ const App = () => {
     markFeedbackUsed(granted);
   };
 
+  const handleZipError = () => {
+    setZipErrorModalOpen(true);
+  };
+
+  const handleNetworkError = () => {
+    setTimeoutErrorModalOpen(true);
+  };
+
+  const handleUploadStart = () => {
+    setUploadLoading(true);
+  };
+
+  const handleUploadEnd = () => {
+    setUploadLoading(false);
+  };
+
+  // Считаем, админ ли пользователь, после всех хуков
+  const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
+
+  // Если админ, просто показываем админскую панель и завершаем функцию
+  if (isAdmin) {
+    return <AdminDashboard />;
+  }
+
+  // Вычисляем дополнительные флаги и показатели для анализа и вывода
+  const approxBytes = meta ? estimateRangeBytes(meta, rangeFrom, rangeTo) : null;
+  const isOverLimit = meta && approxBytes !== null && approxBytes > meta.recommended_bytes;
+  const canAnalyze = !!chatPayload && !isOverLimit && !loading && !metaLoading;
   const shouldShowFeedbackForm = !paymentEnabled && shouldShowFeedback(!!rateLimitMessage);
 
   return (
     <PageLayout>
-      {/* 🔹 Модальное окно поверх main: только во время анализа */}
-      {loading && (
+      {(loading || uploadLoading) && (
         <div className={styles.analyzeModal}>
           <div className={styles.analyzeModal__backdrop} />
           <div className={styles.analyzeModal__panel}>
@@ -148,12 +208,22 @@ const App = () => {
           </div>
         </div>
       )}
+
+      {/* FAQ о форматах и объёме файлов */}
       <ChatFaqCard />
-      {/* Экран загрузки + анализ + мета + FAQ */}
+
+      {/* Экран загрузки и анализа */}
       <div style={{ display: !result ? 'block' : 'none' }}>
         <div className='content-grid'>
           <div className='content-column'>
-            <ChatUploadForm onChatReady={handleChatReady} key={chatUploadKey} />
+            <ChatUploadForm
+              onChatReady={handleChatReady}
+              onError={handleZipError}
+              onNetworkError={handleNetworkError}
+              onUploadStart={handleUploadStart}
+              onUploadEnd={handleUploadEnd}
+              key={chatUploadKey}
+            />
           </div>
 
           <div className='content-column'>
@@ -171,7 +241,7 @@ const App = () => {
               isOverLimit={isOverLimit ?? undefined}
             />
 
-            {/* 🔹 Лоадер метаданных: чат уже есть, meta ещё нет */}
+            {/* Лоадер метаданных: файл загружен, meta ещё нет */}
             {chatPayload && !meta && (
               <section className='card meta-card meta-card--loading'>
                 <h2 className='card__title'>{APP_TEXT.META_LOADING_TITLE}</h2>
@@ -183,12 +253,12 @@ const App = () => {
               </section>
             )}
 
-            {/* форма отзыва — блок под кнопкой анализа */}
+            {/* Форма отзыва под кнопкой анализа */}
             {shouldShowFeedbackForm && (
               <FeedbackForm onSent={handleFeedbackSent} initialOpen={true} />
             )}
 
-            {/* блок диапазона/объёма */}
+            {/* Блок выбора диапазона и отображения объёма текста */}
             {meta && (
               <ChatMetaBlock
                 meta={meta}
@@ -218,14 +288,20 @@ const App = () => {
         />
       </div>
 
-      {/* Модальное окно ошибки */}
+      {/* Модальные окна для ошибок */}
       <ErrorModal
         isOpen={errorModalOpen}
         onClose={() => setErrorModalOpen(false)}
         errorMessage={errorMessage || undefined}
+      />
+      <ZipErrorModal isOpen={zipErrorModalOpen} onClose={() => setZipErrorModalOpen(false)} />
+      <TimeoutErrorModal
+        isOpen={timeoutErrorModalOpen}
+        onClose={() => setTimeoutErrorModalOpen(false)}
       />
     </PageLayout>
   );
 };
 
 export default App;
+

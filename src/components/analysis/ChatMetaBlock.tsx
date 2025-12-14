@@ -8,6 +8,7 @@ import {
 } from '../../utils';
 import { APP_TEXT } from '../../constants';
 import styles from './ChatMetaBlock.module.css';
+import { RangeSlider } from './RangeSlider';
 
 interface ChatMetaBlockProps {
   meta: ChatMetaResponse | null;
@@ -53,6 +54,28 @@ export const ChatMetaBlock = ({
     onRangeChange(rangeFrom, value || null);
   };
 
+  // Конвертируем даты в timestamp для слайдера
+  const minTimestamp = meta.stats.first_message_at
+    ? new Date(meta.stats.first_message_at).getTime()
+    : Date.now();
+  const maxTimestamp = meta.stats.last_message_at
+    ? new Date(meta.stats.last_message_at).getTime()
+    : Date.now();
+
+  const fromTimestamp = rangeFrom
+    ? new Date(rangeFrom).getTime()
+    : minTimestamp;
+  const toTimestamp = rangeTo
+    ? new Date(rangeTo).getTime()
+    : maxTimestamp;
+
+  // Обработчик изменения слайдера
+  const handleSliderChange = (from: number, to: number) => {
+    const fromDate = new Date(from).toISOString().slice(0, 10);
+    const toDate = new Date(to).toISOString().slice(0, 10);
+    onRangeChange(fromDate, toDate);
+  };
+
   return (
     <section className={`card ${styles.metaCard}`}>
       <h2 className="card__title">{APP_TEXT.META_TITLE}</h2>
@@ -61,6 +84,15 @@ export const ChatMetaBlock = ({
       </p>
 
       <div className={styles.metaRange}>
+        {/* Range Slider */}
+        <RangeSlider
+          min={minTimestamp}
+          max={maxTimestamp}
+          valueFrom={fromTimestamp}
+          valueTo={toTimestamp}
+          onChange={handleSliderChange}
+        />
+
         <div className={styles.metaRange__fields}>
           <label className={styles.metaRange__field}>
             <span className={styles.metaRange__label}>{APP_TEXT.META_RANGE_FROM}</span>

@@ -1,6 +1,6 @@
 export const FEEDBACK_FLAG_KEY = 'chatpsy_feedback_used';
 
-export const ALLOWED_FILE_EXTENSIONS = ['.txt', '.html', '.htm'];
+export const ALLOWED_FILE_EXTENSIONS = ['.txt', '.html', '.htm', '.zip'];
 
 export const PARTICIPANT_COLORS: Record<string, string> = {
   USER_1: 'user-chip-1',
