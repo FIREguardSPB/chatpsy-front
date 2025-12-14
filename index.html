@@ -1,13 +1,67 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatPsy</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatPsy</title>
+
+  <!-- 🔹 preload основного бандла Vite -->
+  <link rel="preload" href="/src/main.tsx" as="script">
+
+  <style>
+      body {
+          margin: 0;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+          background: #f9fbff;
+      }
+      #root { min-height: 100vh; }
+      .app-skeleton {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+      }
+      .header {
+          padding: 16px 20px;
+          font-weight: 600;
+          font-size: 18px;
+          background: #fff;
+          border-bottom: 1px solid #e5e7eb;
+      }
+      .loader {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: #64748b;
+          gap: 12px;
+      }
+      .spinner {
+          width: 36px;
+          height: 36px;
+          border: 3px solid #e5e7eb;
+          border-top-color: #6366f1;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+          to { transform: rotate(360deg); }
+      }
+  </style>
+</head>
+
+<body>
+<div id="root">
+  <div class="app-skeleton">
+    <div class="header">ChatPsy</div>
+    <div class="loader">
+      <div class="spinner"></div>
+      <div>Провожу анализ…</div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
+
