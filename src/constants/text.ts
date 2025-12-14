@@ -29,7 +29,7 @@ export const APP_TEXT = {
   UPLOAD_TOTAL_SIZE: 'общий размер:',
   UPLOAD_ERROR: 'Не удалось прочитать файлы. Попробуйте ещё раз.',
   UPLOAD_PREVIEW_ORIGINAL: 'Фрагмент оригинала',
-  UPLOAD_PREVIEW_ANONYMIZED: 'Фрагмент анонимизированный',
+  UPLOAD_PREVIEW_ANONYMIZED: 'Анонимизированный',
   UPLOAD_MAPPING_SHOW: 'Показать, у кого какой псевдоним',
 
   // Analysis Section
