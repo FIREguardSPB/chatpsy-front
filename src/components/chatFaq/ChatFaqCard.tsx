@@ -1,6 +1,7 @@
+import { useState, useRef, useEffect } from 'react';
+
 import { APP_TEXT } from '../../constants';
 import styles from './ChatFaqCard.module.css';
-import { useState, useRef, useEffect } from 'react';
 
 export const ChatFaqCard = () => {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);

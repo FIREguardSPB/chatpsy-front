@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+
 import { useFeedback } from './useFeedback';
 
 describe('useFeedback', () => {
@@ -19,7 +20,7 @@ describe('useFeedback', () => {
 
   it('should mark feedback as used', () => {
     const { result } = renderHook(() => useFeedback());
-    
+
     act(() => {
       result.current.markFeedbackUsed(3);
     });
@@ -29,7 +30,7 @@ describe('useFeedback', () => {
 
   it('should persist feedback state in localStorage', () => {
     const { result } = renderHook(() => useFeedback());
-    
+
     act(() => {
       result.current.markFeedbackUsed(5);
     });
@@ -41,7 +42,7 @@ describe('useFeedback', () => {
 
   it('should handle zero granted analyses', () => {
     const { result } = renderHook(() => useFeedback());
-    
+
     act(() => {
       result.current.markFeedbackUsed(0);
     });

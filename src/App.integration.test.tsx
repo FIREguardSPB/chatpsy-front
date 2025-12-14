@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import App from './App';
 import * as chatAnalyzerApi from './api/chatAnalyzer';
 import type { AnalyzeResponse } from './types/api';
@@ -15,7 +16,7 @@ describe('App Integration Tests', () => {
 
   it('should complete full chat upload and analysis flow', async () => {
     const user = userEvent.setup();
-    
+
     // Mock API responses
     const mockMetaResponse = {
       stats: {

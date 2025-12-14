@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { anonymizeChat } from './anonymize';
 
 describe('anonymizeChat', () => {
@@ -6,7 +7,7 @@ describe('anonymizeChat', () => {
     it('should anonymize Telegram user names', () => {
       const input = '<div class="from_name">Иван Петров</div>Привет!';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('USER_1');
       expect(result.anonymized).not.toContain('Иван Петров');
       expect(result.mapping['Иван Петров']).toBe('USER_1');
@@ -19,7 +20,7 @@ describe('anonymizeChat', () => {
         <div class="from_name">Мария</div>Как дела?
       `;
       const result = anonymizeChat(input);
-      
+
       expect(result.mapping['Мария']).toBe('USER_1');
       expect(result.mapping['Иван']).toBe('USER_2');
       // Мария should appear twice with same alias
@@ -30,7 +31,7 @@ describe('anonymizeChat', () => {
     it('should not anonymize non-person names', () => {
       const input = '<div class="from_name">вы ушли с маршрута</div>';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('вы ушли с маршрута');
     });
   });
@@ -39,7 +40,7 @@ describe('anonymizeChat', () => {
     it('should anonymize WhatsApp message senders', () => {
       const input = '12.03.2024, 21:15 - Александр: Привет всем!';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('USER_1');
       expect(result.anonymized).not.toContain('Александр');
       expect(result.mapping['Александр']).toBe('USER_1');
@@ -48,7 +49,7 @@ describe('anonymizeChat', () => {
     it('should preserve message content', () => {
       const input = '12.03.2024, 21:15 - Мария: Как дела?';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('Как дела?');
       expect(result.anonymized).toContain('12.03.2024, 21:15');
     });
@@ -58,7 +59,7 @@ describe('anonymizeChat', () => {
     it('should anonymize phone numbers', () => {
       const input = 'Мой номер: +7 (999) 123-45-67';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('[PHONE]');
       expect(result.anonymized).not.toContain('+7 (999) 123-45-67');
     });
@@ -69,7 +70,7 @@ describe('anonymizeChat', () => {
         '8 (800) 555-35-35',
         '+7-999-123-4567',
       ];
-      
+
       inputs.forEach(phone => {
         const result = anonymizeChat(phone);
         expect(result.anonymized).toContain('[PHONE]');
@@ -82,7 +83,7 @@ describe('anonymizeChat', () => {
     it('should anonymize email addresses', () => {
       const input = 'Напиши мне: user@example.com';
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('[EMAIL]');
       expect(result.anonymized).not.toContain('user@example.com');
     });
@@ -93,7 +94,7 @@ describe('anonymizeChat', () => {
         'user.name+tag@example.co.uk',
         'test_user123@subdomain.example.org',
       ];
-      
+
       inputs.forEach(email => {
         const result = anonymizeChat(email);
         expect(result.anonymized).toContain('[EMAIL]');
@@ -110,7 +111,7 @@ describe('anonymizeChat', () => {
         Email: sergey@mail.ru
       `;
       const result = anonymizeChat(input);
-      
+
       expect(result.anonymized).toContain('USER_1');
       expect(result.anonymized).toContain('[PHONE]');
       expect(result.anonymized).toContain('[EMAIL]');
@@ -126,7 +127,7 @@ describe('anonymizeChat', () => {
         Анна написала сообщение
       `;
       const result = anonymizeChat(input);
-      
+
       // All occurrences of "Анна" should be replaced
       expect(result.anonymized).not.toContain('Анна');
       const userMatches = result.anonymized.match(/USER_1/g);
@@ -140,7 +141,7 @@ describe('anonymizeChat', () => {
         <div class="from_name">Петр</div>
       `;
       const result = anonymizeChat(input);
-      
+
       expect(Object.keys(result.mapping)).toHaveLength(3);
       expect(result.mapping['Иван']).toBe('USER_1');
       expect(result.mapping['Мария']).toBe('USER_2');

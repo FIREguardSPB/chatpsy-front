@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
+import axios from 'axios';
 
-import { httpClient } from '../api';
-import type { ChatMetaResponse } from '../types';
+import { fetchChatMeta } from '../api/chatAnalyzer';
+import type { ChatMetaResponse } from '../types/api';
+import { APP_TEXT } from '../constants';
 
 interface UseChatMetaReturn {
   meta: ChatMetaResponse | null;
@@ -28,11 +30,8 @@ export function useChatMeta(): UseChatMetaReturn {
     setError(null);
 
     try {
-      const resp = await httpClient.post<ChatMetaResponse>('/chat_meta', {
-        chat_text: chatText,
-      });
-
-      const m = resp.data;
+      const resp = await fetchChatMeta(chatText);
+      const m = resp;
       setMeta(m);
 
       const first = m.stats.first_message_at
@@ -44,9 +43,25 @@ export function useChatMeta(): UseChatMetaReturn {
 
       setRangeFrom(first);
       setRangeTo(last);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error fetching chat metadata:', err);
-      setError(err instanceof Error ? err : new Error('Unknown error'));
+      
+      if (axios.isAxiosError(err)) {
+        // Проверяем, является ли ошибка таймаутом
+        if (err.code === 'ECONNABORTED' || 
+            err.message.includes('timeout') || 
+            err.message.includes('Timeout') ||
+            (err.response && err.response.status === 408)) {
+          const timeoutError = new Error(APP_TEXT.TIMEOUT_ERROR_MESSAGE);
+          timeoutError.name = 'TimeoutError';
+          setError(timeoutError);
+        } else {
+          setError(err instanceof Error ? err : new Error('Unknown error'));
+        }
+      } else {
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+      }
+      
       setMeta(null);
       setRangeFrom(null);
       setRangeTo(null);

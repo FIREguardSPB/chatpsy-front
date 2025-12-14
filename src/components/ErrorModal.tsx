@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { APP_TEXT } from '../constants';
 import styles from './ErrorModal.module.css';
 

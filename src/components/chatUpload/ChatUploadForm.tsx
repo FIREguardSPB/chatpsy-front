@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 
 import type { FileStatus, ChatPayload } from '../../types';
 import {
@@ -14,13 +15,20 @@ import {
   CHAT_PREVIEW_LENGTH,
   APP_TEXT,
 } from '../../constants';
+import { processZipFile } from '../../api/chatAnalyzer';
 import styles from './ChatUploadForm.module.css';
+
+// Добавляем импорт для работы с ZIP-файлами
 
 interface ChatUploadFormProps {
   onChatReady: (params: ChatPayload) => void;
+  onError?: () => void; // Обработчик для ошибок содержимого ZIP-файлов
+  onNetworkError?: () => void; // Обработчик для сетевых ошибок
+  onUploadStart?: () => void; // Добавляем пропс для начала загрузки
+  onUploadEnd?: () => void; // Добавляем пропс для окончания загрузки
 }
 
-export const ChatUploadForm = ({ onChatReady }: ChatUploadFormProps) => {
+export const ChatUploadForm = ({ onChatReady, onError, onNetworkError, onUploadStart, onUploadEnd }: ChatUploadFormProps) => {
   const [fileStatus, setFileStatus] = useState<FileStatus>("idle");
   const [rawPreview, setRawPreview] = useState("");
   const [anonPreview, setAnonPreview] = useState("");
@@ -56,7 +64,11 @@ export const ChatUploadForm = ({ onChatReady }: ChatUploadFormProps) => {
 
     if (allowed.length === 0) {
       setFileStatus("error");
-      console.error("Поддерживаются только файлы .txt и .html");
+      const errorMsg = "Поддерживаются только файлы .txt, .html и .zip";
+      console.error(errorMsg);
+      if (onError) {
+        onError();
+      }
       return;
     }
 
@@ -65,37 +77,82 @@ export const ChatUploadForm = ({ onChatReady }: ChatUploadFormProps) => {
     }
 
     try {
-      const files = allowed.sort((a, b) =>
-        a.name.localeCompare(b.name, undefined, {
-          numeric: true,
-          sensitivity: "base",
-        }),
-      );
+      // Уведомляем о начале загрузки
+      if (onUploadStart) {
+        onUploadStart();
+      }
 
-      setFileNames(files.map((f) => f.name));
-      setTotalSize(files.reduce((sum, f) => sum + f.size, 0));
+      // Обрабатываем ZIP-файлы
+      let combinedContent = "";
+      const processedFileNames: string[] = [];
+      let totalProcessedSize = 0;
 
-      const contents = await Promise.all(files.map((f) => f.text()));
+      for (const file of allowed) {
+        if (file.name.toLowerCase().endsWith('.zip')) {
+          // Отправляем ZIP-файл на сервер для обработки
+          try {
+            const chatText = await processZipFile(file);
+            combinedContent += chatText;
+            processedFileNames.push(file.name);
+            totalProcessedSize += file.size;
+          } catch (error: any) {
+            setFileStatus("error");
+            console.error("Ошибка при обработке ZIP-файла:", error);
 
-      const combined = contents
-        .map((content, idx) => {
-          const name = files[idx].name;
-          return `
+            // Проверяем, является ли ошибка сетевой
+            if (axios.isAxiosError(error) &&
+                (error.code === 'ECONNABORTED' ||
+                 error.code === 'ECONNREFUSED' ||
+                 error.message.includes('Network Error') ||
+                 error.message.includes('timeout') ||
+                 error.message.includes('Timeout'))) {
+              // Для сетевых ошибок вызываем специальный обработчик
+              if (onNetworkError) {
+                onNetworkError();
+              } else if (onError) {
+                onError();
+              }
+            } else {
+              // Для ошибок содержимого ZIP-файлов отображаем специальное сообщение
+              if (onError) {
+                onError();
+              }
+            }
 
-<!-- FILE: ${name} -->
+            // Уведомляем об окончании загрузки
+            if (onUploadEnd) {
+              onUploadEnd();
+            }
+            return;
+          }
+        } else {
+          // Обычные файлы обрабатываем как раньше
+          const content = await file.text();
+          combinedContent += `
+
+<!-- FILE: ${file.name} -->
 
 ${content}`;
-        })
-        .join("");
+          processedFileNames.push(file.name);
+          totalProcessedSize += file.size;
+        }
+      }
 
-      const rawSlice = combined.slice(0, CHAT_PREVIEW_LENGTH);
+      // Уведомляем об окончании загрузки
+      if (onUploadEnd) {
+        onUploadEnd();
+      }
+
+      const rawSlice = combinedContent.slice(0, CHAT_PREVIEW_LENGTH);
       setRawPreview(rawSlice);
 
-      const { anonymized, mapping: nameMapping } = anonymizeChat(combined);
+      const { anonymized, mapping: nameMapping } = anonymizeChat(combinedContent);
       const anonSlice = anonymized.slice(0, CHAT_PREVIEW_LENGTH);
       setAnonPreview(anonSlice);
       setMapping(nameMapping);
 
+      setFileNames(processedFileNames);
+      setTotalSize(totalProcessedSize);
       setFileStatus("loaded");
 
       onChatReady({
@@ -107,6 +164,13 @@ ${content}`;
     } catch (err) {
       console.error(err);
       setFileStatus("error");
+      // Уведомляем об окончании загрузки
+      if (onUploadEnd) {
+        onUploadEnd();
+      }
+      if (onError) {
+        onError();
+      }
     }
   };
 
@@ -138,7 +202,7 @@ ${content}`;
           {APP_TEXT.UPLOAD_BUTTON}
           <input
             type="file"
-            accept=".txt,.html,.htm"
+            accept=".txt,.html,.htm,.zip"
             multiple
             onChange={handleFileChange}
             className={styles.fileInputNative}
